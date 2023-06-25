@@ -1,23 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import Header from "./components/Header";
+import Main from "./components/Main";
+import MainFilterBox from "./components/MainFilterBox";
 
 function App() {
+  const [filters, setFilters] = useState([]);
+
+  const updateItem = (e) => {
+    let items = [...filters, e];
+    let newItems = items.filter((item, index) => {
+      return items.indexOf(item) === index;
+    });
+    setFilters(newItems);
+  };
+
+  const deleteItem = (e) => {
+    let items = filters.filter((item) => {
+      return item !== e;
+    });
+    setFilters(items);
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="bg-[#effafa] h-[100%] w-[100vw]">
+      <Header />
+      {filters.length === 0 ? (
+        <Main updateItem={(e) => updateItem(e)} />
+      ) : (
+        <MainFilterBox
+          filters={filters}
+          updateItem={(e) => updateItem(e)}
+          deleteItem={(e) => deleteItem(e)}
+          clearItem={() => setFilters([])}
+        />
+      )}
     </div>
   );
 }
